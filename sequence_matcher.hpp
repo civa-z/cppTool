@@ -3,10 +3,10 @@
 #include <algorithm>
 
 template<typename T>
-class SequenceMather{
+class SequenceMatcher{
 public:
-    SequenceMather(std::vector<T> sequence, unsigned int sequence_id):
-            sequence_id(sequence_id), sequence(sequence){
+    SequenceMatcher(std::vector<T> sequence, unsigned int sequence_id):
+            sequence(sequence), sequence_id(sequence_id){
         m_start_it = this->sequence.end();
         m_now_it = this->sequence.end();
         m_previous_it = this->sequence.end();
@@ -44,11 +44,12 @@ public:
             if(!match_sequence_expect())
                 reset();
 
-        if (m_start_it == sequence.end())
+        if (m_start_it == sequence.end()){
             if (match_sequence_begin())
                 return -3;
             else
                 return -4;
+        }
 
         if (matched_sequence_end())
             return sequence_id;
@@ -76,10 +77,10 @@ protected:
 };
 
 template<typename T>
-class LoopSequenceMather: public SequenceMather<T>{
+class LoopSequenceMatcher: public SequenceMatcher<T>{
 public:
-    LoopSequenceMather(std::vector<T> sequence, unsigned int sequence_id):
-        SequenceMather<T>::SequenceMather(sequence, sequence_id){}
+    LoopSequenceMatcher(std::vector<T> sequence, unsigned int sequence_id):
+        SequenceMatcher<T>::SequenceMatcher(sequence, sequence_id){}
 
     virtual bool match_sequence_begin() override final {
         this->m_start_it = this->m_now_it;
@@ -111,10 +112,10 @@ public:
 };
 
 template<typename T>
-class NormalSequenceMather: public SequenceMather<T>{
+class NormalSequenceMatcher: public SequenceMatcher<T>{
 public:
-    NormalSequenceMather(std::vector<T> sequence, unsigned int sequence_id):
-         SequenceMather<T>::SequenceMather(sequence, sequence_id){}
+    NormalSequenceMatcher(std::vector<T> sequence, unsigned int sequence_id):
+         SequenceMatcher<T>::SequenceMatcher(sequence, sequence_id){}
 
     virtual bool match_sequence_begin() override final {
         if (this->m_now_it == this->sequence.begin()){
