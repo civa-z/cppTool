@@ -19,16 +19,20 @@ const std::vector< std::pair< std::vector<int>, std::pair<bool, int> >> gestureS
 
 ScrlSequenceRecognizer::ScrlSequenceRecognizer(){
     for (auto item : gestureSequenceTab ){
-        if (!item.second.first)
-            gestureSequenceList.push_back(new NormalSequenceMatcher<int>(item.first, item.second.second));
+        std::vector<StaticLable> staticGestureSequence;
+        for (auto staticGestureItem : item.first){
+            staticGestureSequence.push_back(StaticLable(staticGestureItem, 0));
+        }
+        if (item.second.first)
+            gestureSequenceList.push_back(new LoopSequenceMatcher<StaticLable>(staticGestureSequence, item.second.second));
         else
-            gestureSequenceList.push_back(new LoopSequenceMatcher<int>(item.first, item.second.second));
+            gestureSequenceList.push_back(new NormalSequenceMatcher<StaticLable>(staticGestureSequence, item.second.second));
     }
 }
 
 ScrlSequenceRecognizer::~ScrlSequenceRecognizer(){}
 
-int ScrlSequenceRecognizer::pushItem(int item){
+int ScrlSequenceRecognizer::pushItem(StaticLable item){
     int result = -1;
     for (auto gestureSequence : gestureSequenceList){
         auto gestureID = gestureSequence->pushItem(item);

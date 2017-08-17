@@ -45,16 +45,22 @@ public:
                 reset();
 
         if (m_start_it == sequence.end()){
-            if (match_sequence_begin())
+            if (match_sequence_begin()){
                 return -3;
-            else
+                start_item = item;
+            } else {
                 return -4;
+            }
         }
 
         if (matched_sequence_end())
             return sequence_id;
         else
             return -5;
+    }
+
+    T getStartItem(){
+        return start_item;
     }
 
     virtual bool match_sequence_begin()=0;
@@ -71,6 +77,8 @@ protected:
     const int sequence_id;
 
     // m : matched
+    T start_item;
+
     typename std::vector<T>::const_iterator m_start_it;
     typename std::vector<T>::const_iterator m_previous_it;
     typename std::vector<T>::const_iterator m_now_it;
